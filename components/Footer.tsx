@@ -4,14 +4,30 @@ import { useReveal } from '../hooks/useReveal';
 
 const BASE = import.meta.env.BASE_URL;
 
+const FORMSPREE = 'https://formspree.io/f/xwvydjvv';
+
 const Footer: React.FC<{ t: TranslationSet }> = ({ t }) => {
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const ref = useReveal();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 5000);
+    setStatus('sending');
+    try {
+      const res = await fetch(FORMSPREE, {
+        method: 'POST',
+        body: new FormData(e.currentTarget),
+        headers: { Accept: 'application/json' },
+      });
+      if (res.ok) {
+        setStatus('success');
+        (e.target as HTMLFormElement).reset();
+      } else {
+        setStatus('error');
+      }
+    } catch {
+      setStatus('error');
+    }
   };
 
   return (
@@ -109,7 +125,7 @@ const Footer: React.FC<{ t: TranslationSet }> = ({ t }) => {
           <div className="reveal d-200 space-y-5">
             <h4 className="text-white font-serif italic text-xl tracking-wide">{t.formTitle}</h4>
 
-            {submitted ? (
+            {status === 'success' ? (
               <div className="bg-serene-green/15 border border-serene-green/30 rounded-2xl p-6 text-serene-green">
                 {t.formSuccess}
               </div>
@@ -126,6 +142,7 @@ const Footer: React.FC<{ t: TranslationSet }> = ({ t }) => {
                       </label>
                       <input
                         id={id}
+                        name={id}
                         type={type}
                         required
                         className="w-full bg-stone-900/70 border border-stone-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-serene-green transition-colors"
@@ -139,6 +156,7 @@ const Footer: React.FC<{ t: TranslationSet }> = ({ t }) => {
                   </label>
                   <input
                     id="subject"
+                    name="subject"
                     type="text"
                     required
                     className="w-full bg-stone-900/70 border border-stone-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-serene-green transition-colors"
@@ -150,16 +168,33 @@ const Footer: React.FC<{ t: TranslationSet }> = ({ t }) => {
                   </label>
                   <textarea
                     id="message"
+                    name="message"
                     rows={4}
                     required
                     className="w-full bg-stone-900/70 border border-stone-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-serene-green transition-colors resize-none"
                   />
                 </div>
+
+                {status === 'error' && (
+                  <p className="text-red-400 text-xs">
+                    Κάτι πήγε στραβά. Δοκιμάστε ξανά ή επικοινωνήστε τηλεφωνικά.
+                  </p>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full py-3 bg-serene-green text-white rounded-full hover:bg-serene-gold hover:text-stone-900 transition-all duration-300 uppercase tracking-[0.2em] text-xs font-bold"
+                  disabled={status === 'sending'}
+                  className="w-full py-3 bg-serene-green text-white rounded-full hover:bg-serene-gold hover:text-stone-900 transition-all duration-300 uppercase tracking-[0.2em] text-xs font-bold disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
-                  {t.formSubmit}
+                  {status === 'sending' ? (
+                    <>
+                      <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                      </svg>
+                      <span>Αποστολή...</span>
+                    </>
+                  ) : t.formSubmit}
                 </button>
               </form>
             )}
