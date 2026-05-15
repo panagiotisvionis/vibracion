@@ -80,7 +80,7 @@ export const SERVICES: ServiceData[] = [
   },
   {
     id: 'couples',
-    photo: '1920.webp',
+    photo: '957.jpg',
     accentPhoto: '957.jpg',
     duration: { el: '90 λεπτά', en: '90 minutes' },
     frequency: '432Hz & 639Hz',
@@ -204,7 +204,7 @@ export const SERVICES: ServiceData[] = [
   {
     id: 'voice',
     photo: '1849.jpg',
-    accentPhoto: '1920.webp',
+    accentPhoto: '957.jpg',
     duration: { el: 'Κάθε Δευτέρα', en: 'Every Monday' },
     title: { el: 'Απελευθέρωση Φωνής', en: 'Voice Release' },
     tagline: {
