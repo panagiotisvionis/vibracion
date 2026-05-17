@@ -18,7 +18,11 @@ const ServiceDetail: React.FC<Props> = ({ lang, setLang }) => {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [id]);
+    if (service) {
+      document.title = `${service.title[lang]} — Vibración Καλαμάτα | Sound Healing`;
+    }
+    return () => { document.title = 'Vibración — Ηχοθεραπεία & Ηχομασάζ Καλαμάτα | Sound Healing Kalamata'; };
+  }, [id, lang, service]);
 
   if (!service) {
     return (
