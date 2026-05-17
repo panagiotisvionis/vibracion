@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://panagiotisvionis.github.io/vibracion/sitemap.xml
+Sitemap: https://vibracion.gr/sitemap.xml
