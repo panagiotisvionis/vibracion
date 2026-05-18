@@ -206,6 +206,9 @@ const Footer: React.FC<{ t: TranslationSet }> = ({ t }) => {
           <p>© {new Date().getFullYear()} Vibración Sound Healing. All rights reserved.</p>
           <p>Eleni Christidou · Kalamata, Greece</p>
         </div>
+        <div className="mt-5 text-center text-[10px] tracking-widest text-stone-700">
+          made with <span className="text-red-400">♥</span> by Panagiotis Vionis
+        </div>
       </div>
     </footer>
   );
